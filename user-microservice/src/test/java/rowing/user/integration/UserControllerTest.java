@@ -30,6 +30,7 @@ import rowing.user.domain.user.User;
 import rowing.user.domain.user.UserRepository;
 import rowing.user.models.AvailabilityModel;
 import rowing.user.models.TwoAvailabilitiesModel;
+import rowing.user.services.AvailabilityService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -597,5 +598,55 @@ public class UserControllerTest {
                 .header("Authorization", "Bearer MockedToken").contentType(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testAddAvailabilityServiceNotNull() throws Exception {
+        // Arrange
+        // Notice how some custom parts of authorisation need to be mocked.
+        // Otherwise, the integration test would never be able to authorise as the authorisation server is offline.
+        when(mockUserRepository.findByUserId("bogdan")).thenReturn(
+                Optional.of(new User("bogdan", "bogdan", "bogdan", "bogdan@gmail.com")));
+        AvailabilityService availabilityService = new AvailabilityService(mockUserRepository);
+        User user = availabilityService.addAvailability("monday", "10:00", "11:00", "bogdan");
+        // Assert
+        assertThat(user).isNotNull();
+    }
+
+    @Test
+    public void testRemoveAvailabilityServiceNotNull() throws Exception {
+        // Arrange
+        // Notice how some custom parts of authorisation need to be mocked.
+        // Otherwise, the integration test would never be able to authorise as the authorisation server is offline.
+        User u = new User("bogdan", "bogdan", "bogdan", "bogdan@gmail.com");
+        u.setAvailability(new ArrayList<AvailabilityIntervals>(
+                Arrays.asList(new AvailabilityIntervals("monday", "10:00", "11:00"))));
+        when(mockUserRepository.findByUserId("bogdan")).thenReturn(Optional.of(u));
+        //when(userRepository.save(Mockito.any(User.class))).thenAnswer(i -> i.getArguments());
+        // Act
+        // Still include Bearer token as AuthFilter itself is not mocked
+        AvailabilityService availabilityService = new AvailabilityService(mockUserRepository);
+        User user = availabilityService.removeAvailability("monday", "10:00", "11:00", "bogdan");
+        // Assert
+        assertThat(user).isNotNull();
+    }
+
+    @Test
+    public void testEditAvailabilityServiceNotNull() throws Exception {
+        // Arrange
+        // Notice how some custom parts of authorisation need to be mocked.
+        // Otherwise, the integration test would never be able to authorise as the authorisation server is offline.
+        User u = new User("bogdan", "bogdan", "bogdan", "bogdan@gmail.com");
+        u.setAvailability(new ArrayList<AvailabilityIntervals>(
+                Arrays.asList(new AvailabilityIntervals("tuesday", "10:00", "11:00"))));
+        when(mockUserRepository.findByUserId("bogdan")).thenReturn(Optional.of(u));
+        //when(userRepository.save(Mockito.any(User.class))).thenAnswer(i -> i.getArguments());
+        // Act
+        // Still include Bearer token as AuthFilter itself is not mocked
+        AvailabilityService availabilityService = new AvailabilityService(mockUserRepository);
+        User user = availabilityService.editAvailability("tuesday", "10:00", "11:00",
+                                        "monday", "12:00", "13:00", "bogdan");
+        // Assert
+        assertThat(user).isNotNull();
     }
 }
