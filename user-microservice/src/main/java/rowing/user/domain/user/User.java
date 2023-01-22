@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 import org.hibernate.annotations.GeneratorType;
 import rowing.commons.*;
+import rowing.commons.entities.UpdateUserDTO;
 import rowing.commons.entities.UserDTO;
 import rowing.user.domain.HasEvents;
 
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A DDD entity representing an application user in our domain.
@@ -216,5 +218,22 @@ public class User extends HasEvents {
                 gender,
                 rowingOrganization,
                 competitive);
+    }
+
+    /**
+     * Sets user's parameters based on UpdateUserDTO object.
+     *
+     * @param updateUserDTO - updateUserDTO objects parameters are extracted from.
+     */
+    public void setParams(UpdateUserDTO updateUserDTO) {
+        Optional.ofNullable(updateUserDTO.getRowingPositions()).ifPresent(this::setRowingPositions);
+        Optional.ofNullable(updateUserDTO.getAvailability()).ifPresent(this::setAvailability);
+        Optional.ofNullable(updateUserDTO.getEmail()).ifPresent(this::setEmail);
+        Optional.ofNullable(updateUserDTO.getFirstName()).ifPresent(this::setFirstName);
+        Optional.ofNullable(updateUserDTO.getLastName()).ifPresent(this::setLastName);
+        Optional.ofNullable(updateUserDTO.getCoxCertificates()).ifPresent(this::setCoxCertificates);
+        Optional.ofNullable(updateUserDTO.getGender()).ifPresent(this::setGender);
+        Optional.ofNullable(updateUserDTO.getRowingOrganization()).ifPresent(this::setRowingOrganization);
+        Optional.ofNullable(updateUserDTO.getCompetitive()).ifPresent(this::setCompetitive);
     }
 }

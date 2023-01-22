@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class EmailServiceTest {
@@ -12,6 +12,8 @@ class EmailServiceTest {
     Notification notification;
     EmailService emailService;
     JavaMailSender mailSender;
+
+    NotifyUserService notifyUserService;
 
     @BeforeEach
     void setup() {
@@ -24,8 +26,11 @@ class EmailServiceTest {
         // mocking
         notification = mock(Notification.class);
         when(notification.getDestinationEmail()).thenReturn("someEmail@gmail.com");
-        when(notification.retrieveSubject()).thenReturn("subj");
-        when(notification.retrieveBody()).thenReturn("body");
+
+        notifyUserService = mock(NotifyUserService.class);
+        when(notifyUserService.retrieveBody(any(Notification.class))).thenReturn("body");
+        when(notifyUserService.retrieveSubject(any(Notification.class))).thenReturn("subj");
+        emailService.setNotifyUserService(notifyUserService);
     }
 
     @Test
@@ -63,7 +68,8 @@ class EmailServiceTest {
 
     @Test
     void exception4() {
-        when(notification.retrieveBody()).thenReturn(null);
+        when(notifyUserService.retrieveBody(any(Notification.class))).thenReturn(null);
+        emailService.setNotifyUserService(notifyUserService);
         assertThrows(IllegalArgumentException.class, () -> {
             emailService.sendEmail(notification);
         });
@@ -71,7 +77,8 @@ class EmailServiceTest {
 
     @Test
     void exception5() {
-        when(notification.retrieveSubject()).thenReturn(null);
+        when(notifyUserService.retrieveSubject(any(Notification.class))).thenReturn(null);
+        emailService.setNotifyUserService(notifyUserService);
         assertThrows(IllegalArgumentException.class, () -> {
             emailService.sendEmail(notification);
         });

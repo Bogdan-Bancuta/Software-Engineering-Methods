@@ -208,14 +208,14 @@ public class ActivityServiceTest {
         assertTrue(ActivityService.checkNewStart(futureDate));
     }
 
-    @Test
-    public void checkStartCurrentFalse() throws ParseException {
-        Calendar calendar = Calendar.getInstance();
-        Date currentDate = calendar.getTime();
+   @Test
+   public void checkStartCurrentFalse() throws ParseException {
+       Calendar calendar = Calendar.getInstance();
+       Date currentDate = calendar.getTime();
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            ActivityService.checkNewStart(currentDate);
-        });
-    }
+       assertThrows(IllegalArgumentException.class, () -> {
+           ActivityService.checkNewStart(currentDate);
+       });
+   }
 
 }

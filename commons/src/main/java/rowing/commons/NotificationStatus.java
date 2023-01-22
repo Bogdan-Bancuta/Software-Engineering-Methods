@@ -7,5 +7,6 @@ public enum NotificationStatus {
     KICKED,
     DELETED,
     CHANGES,
-    ACTIVITY_FULL
+    ACTIVITY_FULL,
+    DEFAULT
 }

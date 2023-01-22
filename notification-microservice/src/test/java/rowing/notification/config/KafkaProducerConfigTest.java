@@ -4,7 +4,6 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -20,29 +19,23 @@ class KafkaProducerConfigTest {
     @BeforeEach
     void setup() {
         kafkaProducerConfig = new KafkaProducerConfig();
-        ReflectionTestUtils.setField(kafkaProducerConfig, "bootstrapServers",
-                "pkc-ewzgj.europe-west4.gcp.confluent.cloud:9092");
-        ReflectionTestUtils.setField(kafkaProducerConfig, "kafkaJaasConfig",
+        kafkaProducerConfig.setKafkaToValues("pkc-ewzgj.europe-west4.gcp.confluent.cloud:9092",
                 "org.apache.kafka.common.security.plain.PlainLoginModule "
-                        + "required username='XB3BPWFWIIFKLH6A' "
-                        + "password='CAoprjk2rgUqNEBAvdY2EAhdLAZ8rz3qx+qNE4uaLG4z7ru9k7BV5efdy2RdOWpB';");
-        ReflectionTestUtils.setField(kafkaProducerConfig, "kafkaSaslMechanism",
-                "PLAIN");
-        ReflectionTestUtils.setField(kafkaProducerConfig, "kafkaSecurityProtocol",
-                "SASL_SSL");
-        ReflectionTestUtils.setField(kafkaProducerConfig, "useAuthentication",
-                true);
+                + "required username='XB3BPWFWIIFKLH6A' "
+                + "password='CAoprjk2rgUqNEBAvdY2EAhdLAZ8rz3qx+qNE4uaLG4z7ru9k7BV5efdy2RdOWpB';",
+                "PLAIN", "SASL_SSL", true);
     }
 
     @Test
     void gettersTest() {
-        assertEquals("pkc-ewzgj.europe-west4.gcp.confluent.cloud:9092", kafkaProducerConfig.getBootstrapServers());
+        assertEquals("pkc-ewzgj.europe-west4.gcp.confluent.cloud:9092",
+                kafkaProducerConfig.getKafkaToValues().get("servers"));
         assertEquals("org.apache.kafka.common.security.plain.PlainLoginModule "
                         + "required username='XB3BPWFWIIFKLH6A' "
                         + "password='CAoprjk2rgUqNEBAvdY2EAhdLAZ8rz3qx+qNE4uaLG4z7ru9k7BV5efdy2RdOWpB';",
-                kafkaProducerConfig.getKafkaJaasConfig());
-        assertEquals("PLAIN", kafkaProducerConfig.getKafkaSaslMechanism());
-        assertEquals("SASL_SSL", kafkaProducerConfig.getKafkaSecurityProtocol());
+                kafkaProducerConfig.getKafkaToValues().get("config"));
+        assertEquals("PLAIN", kafkaProducerConfig.getKafkaToValues().get("mechanism"));
+        assertEquals("SASL_SSL", kafkaProducerConfig.getKafkaToValues().get("protocol"));
         assertEquals(true, kafkaProducerConfig.isUseAuthentication());
     }
 

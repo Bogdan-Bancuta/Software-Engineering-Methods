@@ -68,25 +68,24 @@ public class UserService {
             user = findUserById(userId);
         } catch (UserNotFoundException e) {
             user = new User(userId);
-            if (updateUserDTO.getFirstName() == null || updateUserDTO.getEmail() == null
-                    || updateUserDTO.getLastName() == null) {
-                throw new IllegalArgumentException("First name, last name and email cannot be empty");
-            }
+            validateUpdateUserDTO(updateUserDTO);
         }
-        Optional.ofNullable(updateUserDTO.getRowingPositions()).ifPresent(user::setRowingPositions);
-        Optional.ofNullable(updateUserDTO.getAvailability()).ifPresent(user::setAvailability);
-        Optional.ofNullable(updateUserDTO.getEmail()).ifPresent(user::setEmail);
-        Optional.ofNullable(updateUserDTO.getFirstName()).ifPresent(user::setFirstName);
-        Optional.ofNullable(updateUserDTO.getLastName()).ifPresent(user::setLastName);
-        Optional.ofNullable(updateUserDTO.getCoxCertificates()).ifPresent(user::setCoxCertificates);
-        Optional.ofNullable(updateUserDTO.getGender()).ifPresent(user::setGender);
-        Optional.ofNullable(updateUserDTO.getRowingOrganization()).ifPresent(user::setRowingOrganization);
-        Optional.ofNullable(updateUserDTO.getCompetitive()).ifPresent(user::setCompetitive);
-
+        user.setParams(updateUserDTO);
         UserDTO updatedUserDTO = user.toDTO();
         userRepository.save(user);
-
         return updatedUserDTO;
+    }
+
+    /**
+     * Validates the given updateUserDTO object.
+     *
+     * @param updateUserDTO - object to be validated.
+     */
+    private void validateUpdateUserDTO(UpdateUserDTO updateUserDTO) {
+        if (updateUserDTO.getFirstName() == null || updateUserDTO.getEmail() == null
+                || updateUserDTO.getLastName() == null) {
+            throw new IllegalArgumentException("First name, last name and email cannot be empty");
+        }
     }
 
     /**

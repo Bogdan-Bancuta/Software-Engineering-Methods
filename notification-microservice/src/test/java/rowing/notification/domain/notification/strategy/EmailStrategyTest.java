@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import rowing.notification.domain.notification.EmailService;
 import rowing.notification.domain.notification.Notification;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static rowing.notification.domain.notification.strategy.StrategyName.EMAIL;
 
