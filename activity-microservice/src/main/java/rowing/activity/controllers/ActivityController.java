@@ -224,7 +224,7 @@ public class ActivityController {
             List<CoxCertificate> coxCertificates = new ArrayList<>();
             for (String s : certificates) {
                 if (Certificates.existByName(s)) {
-                    coxCertificates.add(Certificates.getCertificate(s));
+                    //coxCertificates.add(Certificates.getCertificate(s));
                 }
             }
             boolean exists = false;
