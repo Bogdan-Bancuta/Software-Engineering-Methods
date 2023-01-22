@@ -43,12 +43,14 @@ public class Match<T extends MatchingDTO> extends BaseEntity<T> {
                 context -> Duration.ofMillis(context.getSource()),
                 Integer.class, Duration.class);
         mapper.getConfiguration().setSkipNullEnabled(true);
-        if (dto.getId() == null) {
-            // This id will change once the matching entity is saved, but it must be non-null
-            this.id = UUID.randomUUID();
-        } else {
-            this.id = dto.getId();
-        }
+//        if (dto.getId() == null) {
+//            // This id will change once the matching entity is saved, but it must be non-null
+//            this.id = UUID.randomUUID();
+//        } else {
+//            this.id = dto.getId();
+//        }
+        this.id = dto.getId();
+
         this.activityId = dto.getActivityId();
         this.userId = dto.getUserId();
         this.position = dto.getPosition();
