@@ -93,13 +93,6 @@ public class ActivityServiceTest {
                 availability, null);
     }
 
-
-    @Test
-    void activityTypeMatch() {
-        assertThat(amateurTraining.getType().equals("Training"));
-        assertThat(amateurCompetition.getType().equals("Competition"));
-    }
-
     @Test
     public void availabilityCheckTestBoundaryLeftTrue() {
         assertTrue(ActivityService.checkAvailability(amateurTraining, match.getAvailability()));
