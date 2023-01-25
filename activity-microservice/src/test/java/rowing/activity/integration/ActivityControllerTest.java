@@ -516,6 +516,45 @@ public class ActivityControllerTest {
 
     @Test
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void userAcceptedSuccessfullyCox() throws Exception {
+
+        Activity training = amateurTraining;
+        List<Position> positionListNew = new ArrayList<>();
+        positionListNew.add(Position.COACH);
+        positionListNew.add(Position.COX);
+        training.setPositions(positionListNew);
+        training.setApplicants(new ArrayList<>(Arrays.asList("Efe")));
+        Certificates.initialize();
+        exampleUser.setCoxCertificates(new ArrayList<>(Arrays.asList("C4", "8", "C+")));
+        UserDTORequestModel model = new UserDTORequestModel(exampleUser, Position.COX);
+
+        training = mockActivityRepository.save(training);
+        UUID id = training.getId();
+        NotificationRequestModel notificationRequestModel = new NotificationRequestModel("Efe",
+                NotificationStatus.ACCEPTED, id);
+
+
+        mockServer.expect(requestTo("http://localhost:8082/notify"))
+                .andExpect(method(HttpMethod.POST))
+                .andExpect(content().json(JsonUtil.serialize(notificationRequestModel)))
+                .andRespond(withSuccess("extra.efeunluyurt@gmail.com", MediaType.TEXT_PLAIN));
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/activity/" + id + "/accept")
+                .header("Authorization", "Bearer MockedToken")
+                .accept(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        mockServer.verify();
+        // Assert
+        String response = result.getResponse().getContentAsString();
+        assertThat(response).isEqualTo("User " + "Efe"
+                + " is accepted successfully to the activity with id " + id);
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void activityDoesNotExist() throws Exception {
 
         Activity training = amateurTraining;
@@ -1460,7 +1499,7 @@ public class ActivityControllerTest {
                 .accept(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updatedActivity))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isNotFound()).andReturn();
         // Assert
         String response = result.getResponse().getContentAsString();
         assertThat(response).isEqualTo("Activity does not exist !");
