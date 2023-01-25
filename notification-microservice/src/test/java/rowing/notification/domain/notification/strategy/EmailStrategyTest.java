@@ -29,7 +29,7 @@ class EmailStrategyTest {
     }
 
     @Test
-    void getEmailService(){
+    void getEmailService() {
         EmailService emailService = mock(EmailService.class);
         emailStrategy.setEmailService(emailService);
         assertEquals(emailService, emailStrategy.getEmailService());

@@ -24,6 +24,7 @@ class ActivityDTOTest {
     void setup(){
 
     }
+
     @Test
     void getId() {
         assertEquals(new UUID(1, 1), activityDTO.getId());

@@ -118,7 +118,9 @@ public class ActivityDTO implements DTO {
      *
      * @return the location of the activity
      */
-    public String getLocation() { return location; }
+    public String getLocation() {
+        return location;
+    }
 
     /**
      * Getter for the list of positions.

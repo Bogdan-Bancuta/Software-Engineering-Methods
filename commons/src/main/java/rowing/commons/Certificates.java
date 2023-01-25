@@ -43,7 +43,7 @@ public class Certificates {
      * @param name - name of the certificate
      * @return - a certificate object.
      */
-    public static CoxCertificate getCertificate (String name) {
+    public static CoxCertificate getCertificate(String name) {
         if (existByName(name)) {
             for (CoxCertificate certificate : certificatesList) {
                 if (certificate.getName().equals(name)) {
