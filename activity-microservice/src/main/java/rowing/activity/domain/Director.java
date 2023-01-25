@@ -76,7 +76,7 @@ public class Director {
         builder.setId(id);
         builder.setName(name);
         builder.setOwner(owner);
-        builder.setType(type);
+        builder.setType("Competition");
         builder.setStart(start);
         builder.setLocation(location);
         builder.setGender(gender);

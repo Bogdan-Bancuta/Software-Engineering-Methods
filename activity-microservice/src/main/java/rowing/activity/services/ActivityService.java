@@ -79,15 +79,6 @@ public class ActivityService {
     }
 
     /**
-     * Gets example by id.
-     *
-     * @return the example found in the database with the given id
-     */
-    public String hellWorld() {
-        return "Hello " + authManager.getUsername();
-    }
-
-    /**
      * Method to create a new activity and add it to the repository.
      *
      * @param dto that will contain basic activity information
