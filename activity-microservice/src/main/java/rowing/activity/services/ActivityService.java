@@ -197,7 +197,7 @@ public class ActivityService {
             List<String> signUps = activityPresent.getApplicants();
             for (String userId : signUps) {
                 if (userId.equals(match.getUserId())) {
-                    throw new IllegalArgumentException("User already signed up for this activity !\n");
+                    throw new IllegalArgumentException("User already signed up for this thing!!!!!!!!\n");
                 }
             }
 

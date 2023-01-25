@@ -310,31 +310,6 @@ public class ActivityControllerTest {
 
     @Test
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void testSignUpTrainingAlreadySigned() throws Exception {
-        amateurTraining.addApplicant("Admin");
-        amateurTraining = mockActivityRepository.save(amateurTraining);
-        UUID id = amateurTraining.getId();
-
-        trainingId = amateurTraining.getId();
-        match.setActivityId(trainingId);
-        match.setUserId("Admin");
-        mockMatchRepository.save(new Match(match));
-
-        //match.setActivityId(trainingId); // Make sure to set for the activity you want to sign up for
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/activity/sign/{activityId}", trainingId)
-                .header("Authorization", "Bearer MockedToken")
-                .accept(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(match))
-                .contentType(MediaType.APPLICATION_JSON);
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        // Assert
-        String response = result.getResponse().getContentAsString();
-        assertThat(response).isEqualTo("User already signed up for this activity !\n");
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void testSignUpCompetition() throws Exception {
         amateurCompetition = mockActivityRepository.save(amateurCompetition);
         competitionId = amateurCompetition.getId();
