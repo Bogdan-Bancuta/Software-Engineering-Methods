@@ -31,6 +31,8 @@ import rowing.user.domain.user.UserRepository;
 import rowing.user.models.AvailabilityModel;
 import rowing.user.models.TwoAvailabilitiesModel;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -89,6 +91,8 @@ public class UserControllerTest {
 
         // Assert
         result.andExpect(status().isOk());
+
+        assertThat(result.andReturn().getResponse()).isNotNull();
     }
 
     @Test
@@ -117,6 +121,9 @@ public class UserControllerTest {
 
         // Assert
         result.andExpect(status().isBadRequest());
+
+        String response = result.andReturn().getResponse().getErrorMessage();
+        assertThat(response).isEqualTo("AVAILABILITY IS NOT IN THE CORRECT FORMAT");
     }
 
     @Test
@@ -147,6 +154,8 @@ public class UserControllerTest {
 
         // Assert
         result.andExpect(status().isOk());
+
+        assertThat(result.andReturn().getResponse()).isNotNull();
     }
 
     @Test
@@ -178,6 +187,9 @@ public class UserControllerTest {
 
         // Assert
         result.andExpect(status().isNotFound());
+
+        String response = result.andReturn().getResponse().getErrorMessage();
+        assertThat(response).isEqualTo("AVAILABILITY NOT FOUND");
     }
 
     @Test
@@ -208,6 +220,9 @@ public class UserControllerTest {
 
         // Assert
         result.andExpect(status().isBadRequest());
+
+        String response = result.andReturn().getResponse().getErrorMessage();
+        assertThat(response).isEqualTo("AVAILABILITY IS NOT IN THE CORRECT FORMAT");
     }
 
     @Test
@@ -238,6 +253,8 @@ public class UserControllerTest {
 
         // Assert
         result.andExpect(status().isOk());
+
+        assertThat(result.andReturn().getResponse()).isNotNull();
     }
 
     @Test
@@ -268,6 +285,9 @@ public class UserControllerTest {
 
         // Assert
         result.andExpect(status().isNotFound());
+
+        String response = result.andReturn().getResponse().getErrorMessage();
+        assertThat(response).isEqualTo("AVAILABILITY NOT FOUND OR CANNOT BE REPLACED");
     }
 
     @Test
@@ -298,6 +318,9 @@ public class UserControllerTest {
 
         // Assert
         result.andExpect(status().isBadRequest());
+
+        String response = result.andReturn().getResponse().getErrorMessage();
+        assertThat(response).isEqualTo("AVAILABILITY IS NOT IN THE CORRECT FORMAT");
     }
 
     @Test
@@ -473,6 +496,93 @@ public class UserControllerTest {
 
         assertThat(response).isEqualTo("User not found");
 
+    }
+
+    @Test
+    public void getUserAvailability() throws Exception {
+        // Arrange
+        // Notice how some custom parts of authorisation need to be mocked.
+        // Otherwise, the integration test would never be able to authorise as the authorisation server is offline.
+        User u = new User("activityOwner", "bogdan", "bogdan", "bogdan@gmail.com");
+        ArrayList<AvailabilityIntervals> availability = new ArrayList<AvailabilityIntervals>(
+                Arrays.asList(new AvailabilityIntervals("tuesday", "10:00", "11:00")));
+        u.setAvailability(availability);
+        when(mockAuthenticationManager.getUsername()).thenReturn("activity");
+        when(mockJwtTokenVerifier.validateToken(anyString())).thenReturn(true);
+        when(mockJwtTokenVerifier.getUsernameFromToken(anyString())).thenReturn("activityOwner");
+        when(mockUserRepository.findByUserId("activityOwner")).thenReturn(Optional.of(u));
+
+        // Act
+        // Still include Bearer token as AuthFilter itself is not mocked
+        //String json = new JSONObject().put("userId","activityOwner").toString();
+        String json = "activityOwner";
+        ResultActions result = mockMvc.perform(get("/user/get-availability-user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer MockedToken")
+                .content(json));
+
+        // Assert
+        result.andExpect(status().isOk());
+
+        String response = result.andReturn().getResponse().getContentAsString();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        objectMapper.setDateFormat(df);
+        JavaTimeModule module = new JavaTimeModule();
+        objectMapper.registerModule(module);
+
+        assertThat(response).isEqualTo(objectMapper.writeValueAsString(availability));
+    }
+
+    @Test
+    public void getUserAvailabilityException() throws Exception {
+        // Arrange
+        // Notice how some custom parts of authorisation need to be mocked.
+        // Otherwise, the integration test would never be able to authorise as the authorisation server is offline.
+        User u = new User("activityOwner", "bogdan", "bogdan", "bogdan@gmail.com");
+        ArrayList<AvailabilityIntervals> availability = new ArrayList<AvailabilityIntervals>(
+                Arrays.asList(new AvailabilityIntervals("tuesday", "10:00", "11:00")));
+        u.setAvailability(availability);
+        when(mockAuthenticationManager.getUsername()).thenReturn("someUser");
+        when(mockJwtTokenVerifier.validateToken(anyString())).thenReturn(true);
+        when(mockJwtTokenVerifier.getUsernameFromToken(anyString())).thenReturn("activityOwner");
+        when(mockUserRepository.findByUserId("activityOwner")).thenReturn(Optional.of(u));
+
+        // Act
+        // Still include Bearer token as AuthFilter itself is not mocked
+        //String json = new JSONObject().put("userId","activityOwner").toString();
+        String json = "activityOwner";
+        ResultActions result = mockMvc.perform(get("/user/get-availability-user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer MockedToken")
+                .content(json));
+
+        // Assert
+        result.andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void getUserAvailabilityException2() throws Exception {
+        // Arrange
+        // Notice how some custom parts of authorisation need to be mocked.
+        // Otherwise, the integration test would never be able to authorise as the authorisation server is offline.
+        when(mockAuthenticationManager.getUsername()).thenReturn("activity");
+        when(mockJwtTokenVerifier.validateToken(anyString())).thenReturn(true);
+        when(mockJwtTokenVerifier.getUsernameFromToken(anyString())).thenReturn("activityOwner");
+        when(mockUserRepository.findByUserId("activityOwner")).thenReturn(Optional.empty());
+
+        // Act
+        // Still include Bearer token as AuthFilter itself is not mocked
+        //String json = new JSONObject().put("userId","activityOwner").toString();
+        String json = "activityOwner";
+        ResultActions result = mockMvc.perform(get("/user/get-availability-user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer MockedToken")
+                .content(json));
+
+        // Assert
+        result.andExpect(status().isNotFound());
     }
 
     @Test
