@@ -69,8 +69,7 @@ public class ActivityDTO implements DTO {
     /**
      * Empty constructor for ActivityDTO.
      */
-    public ActivityDTO() {
-    }
+    public ActivityDTO() { }
 
     /**
      * Constructor for ActivityDTO.

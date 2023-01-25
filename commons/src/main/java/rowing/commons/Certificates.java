@@ -1,12 +1,14 @@
 package rowing.commons;
 
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Certificates {
-
+    @Getter
     private static List<CoxCertificate> certificatesList;
 
     /**

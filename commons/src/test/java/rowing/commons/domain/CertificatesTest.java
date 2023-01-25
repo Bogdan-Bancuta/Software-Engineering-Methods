@@ -6,6 +6,7 @@ import rowing.commons.Certificates;
 import rowing.commons.CoxCertificate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CertificatesTest {
 
@@ -22,5 +23,17 @@ public class CertificatesTest {
     @Test
     public void testNonExistentName() {
         assertThat(Certificates.existByName("C12")).isEqualTo(false);
+    }
+
+    @Test
+    public void certificateNonExistent() {
+        assertThrows(RuntimeException.class, () -> {
+            Certificates.getCertificate("dota_player");
+        });
+    }
+
+    @Test
+    public void certificateExists() {
+        assertThat(Certificates.getCertificatesList().get(0)).isEqualTo(Certificates.getCertificate("C4"));
     }
 }
