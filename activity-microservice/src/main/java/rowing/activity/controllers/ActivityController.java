@@ -67,17 +67,6 @@ public class ActivityController {
     }
 
     /**
-     * Gets example by id.
-     *
-     * @return the example found in the database with the given id
-     */
-    @GetMapping("/hello")
-    public ResponseEntity<String> helloWorld() {
-        return ResponseEntity.ok(activityService.hellWorld());
-
-    }
-
-    /**
      * Endpoint to create a new activity.
      *
      * @param dto that will contain basic activity information

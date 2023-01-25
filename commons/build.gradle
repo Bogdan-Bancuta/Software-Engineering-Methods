@@ -11,7 +11,7 @@ plugins {
     id 'pmd'
 
     // PITest
-    id 'info.solidsoft.pitest' version '1.5.2'
+    id 'info.solidsoft.pitest' version '1.9.0'
 }
 
 group = 'rowing'
@@ -71,4 +71,16 @@ checkstyle {
 pmd {
     incrementalAnalysis = true
     sourceSets = [sourceSets.main]
+}
+
+apply plugin: 'info.solidsoft.pitest'
+pitest {
+    //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
+    junit5PluginVersion = '1.0.0'
+
+    targetClasses = ['rowing.commons.*']  //by default "${project.group}.*"
+    pitestVersion = '1.9.0' //not needed when a default PIT version should be used
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
 }

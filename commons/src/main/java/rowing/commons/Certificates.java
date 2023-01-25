@@ -1,12 +1,14 @@
 package rowing.commons;
 
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Certificates {
-
+    @Getter
     private static List<CoxCertificate> certificatesList;
 
     /**
@@ -43,7 +45,7 @@ public class Certificates {
      * @param name - name of the certificate
      * @return - a certificate object.
      */
-    public static CoxCertificate getCertificate (String name) {
+    public static CoxCertificate getCertificate(String name) {
         if (existByName(name)) {
             for (CoxCertificate certificate : certificatesList) {
                 if (certificate.getName().equals(name)) {

@@ -79,15 +79,6 @@ public class ActivityService {
     }
 
     /**
-     * Gets example by id.
-     *
-     * @return the example found in the database with the given id
-     */
-    public String hellWorld() {
-        return "Hello " + authManager.getUsername();
-    }
-
-    /**
      * Method to create a new activity and add it to the repository.
      *
      * @param dto that will contain basic activity information
@@ -191,7 +182,6 @@ public class ActivityService {
      * @throws IllegalArgumentException - if the activity is not found in the database or user is not compatible
      */
     public String signUp(MatchingDTO match) throws IllegalArgumentException, JsonProcessingException {
-
         Optional<Activity> activity = activityRepository.findActivityById(match.getActivityId());
         if (activity.isPresent()) {
             Activity activityPresent = activity.get(); // Checking if a user is already signed up for this
