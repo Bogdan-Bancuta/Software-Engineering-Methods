@@ -6,7 +6,7 @@ import rowing.notification.domain.notification.Notification;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static rowing.notification.domain.notification.strategy.StrategyName.EMAIL;
 
 class EmailStrategyTest {
@@ -25,5 +25,13 @@ class EmailStrategyTest {
         Notification notification = mock(Notification.class);
         emailStrategy.setEmailService(emailService);
         emailStrategy.notifyUser(notification);
+        verify(emailService, times(1)).sendEmail(notification);
+    }
+
+    @Test
+    void getEmailService() {
+        EmailService emailService = mock(EmailService.class);
+        emailStrategy.setEmailService(emailService);
+        assertEquals(emailService, emailStrategy.getEmailService());
     }
 }
