@@ -191,7 +191,6 @@ public class ActivityService {
      * @throws IllegalArgumentException - if the activity is not found in the database or user is not compatible
      */
     public String signUp(MatchingDTO match) throws IllegalArgumentException, JsonProcessingException {
-
         Optional<Activity> activity = activityRepository.findActivityById(match.getActivityId());
         if (activity.isPresent()) {
             Activity activityPresent = activity.get(); // Checking if a user is already signed up for this
