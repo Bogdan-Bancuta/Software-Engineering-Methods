@@ -76,7 +76,7 @@ public class Director {
         builder.setId(id);
         builder.setName(name);
         builder.setOwner(owner);
-        //builder.setType("Competition");
+        builder.setType("Competition");
         builder.setStart(start);
         builder.setLocation(location);
         builder.setGender(gender);
@@ -96,7 +96,7 @@ public class Director {
         builder.setId(dto.getId());
         builder.setName(dto.getName());
         builder.setOwner(dto.getOwner());
-        //builder.setType("Competition");
+        builder.setType("Competition");
         builder.setStart(dto.getStart());
         builder.setLocation(dto.getLocation());
         builder.setPositions(dto.getPositions());
