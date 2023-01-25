@@ -708,4 +708,97 @@ public class UserControllerTest {
 
         result.andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void patchUserChangesFirstNameNull() throws Exception {
+        User originalUser = new User("bogdan", "lala", "lala", "bogdan@gmail.com");
+        UserDTO userDTO = originalUser.toDTO();
+
+        // Arrange
+        // Notice how some custom parts of authorisation need to be mocked.
+        // Otherwise, the integration test would never be able to authorise as the authorisation server is offline.
+        when(mockAuthenticationManager.getUsername()).thenReturn("bogdan");
+        when(mockJwtTokenVerifier.validateToken(anyString())).thenReturn(true);
+        when(mockJwtTokenVerifier.getUsernameFromToken(anyString())).thenReturn("bogdan");
+        when(mockUserRepository.findByUserId("bogdan")).thenReturn(Optional.empty());
+
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO(null, null, "joyce@gmail.com",
+                null, "lala", null, Gender.FEMALE, null, null);
+
+        // Act
+        // Still include Bearer token as AuthFilter itself is not mocked
+        ResultActions result = mockMvc.perform(post("/user/update-user")
+                .content(new ObjectMapper().writeValueAsString(updateUserDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer MockedToken"));
+
+
+        // Assert
+        result.andExpect(status().isBadRequest());
+
+        String response = result.andReturn().getResponse().getErrorMessage();
+        assertThat(response).isEqualTo("Input types incorrect.");
+    }
+
+    @Test
+    public void patchUserChangesLastNameNull() throws Exception {
+        User originalUser = new User("bogdan", "lala", "lala", "bogdan@gmail.com");
+        UserDTO userDTO = originalUser.toDTO();
+
+        // Arrange
+        // Notice how some custom parts of authorisation need to be mocked.
+        // Otherwise, the integration test would never be able to authorise as the authorisation server is offline.
+        when(mockAuthenticationManager.getUsername()).thenReturn("bogdan");
+        when(mockJwtTokenVerifier.validateToken(anyString())).thenReturn(true);
+        when(mockJwtTokenVerifier.getUsernameFromToken(anyString())).thenReturn("bogdan");
+        when(mockUserRepository.findByUserId("bogdan")).thenReturn(Optional.empty());
+
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO(null, null, "joyce@gmail.com",
+                "lala", null, null, Gender.FEMALE, null, null);
+
+        // Act
+        // Still include Bearer token as AuthFilter itself is not mocked
+        ResultActions result = mockMvc.perform(post("/user/update-user")
+                .content(new ObjectMapper().writeValueAsString(updateUserDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer MockedToken"));
+
+
+        // Assert
+        result.andExpect(status().isBadRequest());
+
+        String response = result.andReturn().getResponse().getErrorMessage();
+        assertThat(response).isEqualTo("Input types incorrect.");
+    }
+
+    @Test
+    public void patchUserChangesEmailNull() throws Exception {
+        User originalUser = new User("bogdan", "lala", "lala", "bogdan@gmail.com");
+        UserDTO userDTO = originalUser.toDTO();
+
+        // Arrange
+        // Notice how some custom parts of authorisation need to be mocked.
+        // Otherwise, the integration test would never be able to authorise as the authorisation server is offline.
+        when(mockAuthenticationManager.getUsername()).thenReturn("bogdan");
+        when(mockJwtTokenVerifier.validateToken(anyString())).thenReturn(true);
+        when(mockJwtTokenVerifier.getUsernameFromToken(anyString())).thenReturn("bogdan");
+        when(mockUserRepository.findByUserId("bogdan")).thenReturn(Optional.empty());
+
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO(null, null, null,
+                "lala", "lala", null, Gender.FEMALE, null, null);
+
+        // Act
+        // Still include Bearer token as AuthFilter itself is not mocked
+        ResultActions result = mockMvc.perform(post("/user/update-user")
+                .content(new ObjectMapper().writeValueAsString(updateUserDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer MockedToken"));
+
+
+        // Assert
+        result.andExpect(status().isBadRequest());
+
+        String response = result.andReturn().getResponse().getErrorMessage();
+        assertThat(response).isEqualTo("Input types incorrect.");
+    }
 }
