@@ -300,7 +300,6 @@ public class ActivityService {
      * @throws IllegalArgumentException - if the activity is not found, or the user is not signed up for this activity
      */
     public String signOff(UUID activityId) throws IllegalArgumentException {
-        activityId = null;
         String username = authManager.getUsername();
         Optional<Activity> optionalActivity = activityRepository.findActivityById(activityId);
         if (!optionalActivity.isPresent()) {
