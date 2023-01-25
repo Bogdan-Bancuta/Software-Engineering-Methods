@@ -49,6 +49,7 @@ public class Match<T extends MatchingDTO> extends BaseEntity<T> {
         } else {
             this.id = dto.getId();
         }
+
         this.activityId = dto.getActivityId();
         this.userId = dto.getUserId();
         this.position = dto.getPosition();
